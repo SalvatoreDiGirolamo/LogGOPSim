@@ -1,6 +1,6 @@
 import json
 from goal import GoalComm
-from patterns import binomialtree, recdoub, ring, linear
+from patterns import binomialtree, recdoub, ring, linear, swing
 
 
 def mpi_communication_pattern_selection(
@@ -219,6 +219,25 @@ def allreduce(
         )
         comms.append(
             recdoub(
+                comm_size=comm_size,
+                datasize=datasize,
+                tag=tag + comm_size,
+                algorithm="allgather",
+                **kwargs,
+            )
+        )
+    elif ptrn == "swing":
+        comms.append(
+            swing(
+                comm_size=comm_size,
+                datasize=datasize,
+                tag=tag,
+                algorithm="reduce-scatter",
+                **kwargs,
+            )
+        )
+        comms.append(
+            swing(
                 comm_size=comm_size,
                 datasize=datasize,
                 tag=tag + comm_size,

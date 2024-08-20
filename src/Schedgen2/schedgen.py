@@ -64,7 +64,7 @@ for p in mpi + additional_microbenchmarks:
     p.add_argument(
         "--ptrn",
         dest="ptrn",
-        choices=["datasize_based", "binomialtree", "recdoub", "ring", "linear"],
+        choices=["datasize_based", "binomialtree", "recdoub", "ring", "linear", "swing"],
         default="datasize_based",
         help="Pattern to use for communication, note that not all patterns are available for all communication types",
     )
@@ -136,6 +136,9 @@ def verify_params(args):
     assert (
         args.ptrn != "recdoub" or args.comm_size & (args.comm_size - 1) == 0
     ), "Currently recdoub pattern requires a power of 2 communicator size."
+    assert (
+        args.ptrn != "swing" or args.comm_size & (args.comm_size - 1) == 0
+    ), "Currently swing pattern requires a power of 2 communicator size."
 
 
 def comm_to_func(comm: str) -> callable:
